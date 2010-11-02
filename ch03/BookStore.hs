@@ -33,8 +33,6 @@ data Bool = False | True
 
 -- | BillingInfo
 --
--- Examples:
---
 -- >>> :type CreditCard
 -- CreditCard :: CardNumber -> CardHolder -> Address -> BillingInfo
 -- >>> CreditCard "2901650221064486" "Thomas Gradgrind" ["Dickens", "England"]
@@ -58,3 +56,32 @@ data BillingInfo = CreditCard CardNumber CardHolder Address
                  | CashOnDelivery
                  | Invoice CustomerID
                    deriving (Show)
+
+-- | Book properties
+--
+-- >>> bookID (Book 3 "Probability Theory" ["E.T.H. Jaynes"])
+-- 3
+-- >>> bookTitle (Book 3 "Probability Theory" ["E.T.H. Jaynes"])
+-- "Probability Theory"
+-- >>> bookAuthors (Book 3 "Probability Theory" ["E.T.H. Jaynes"])
+-- ["E.T.H. Jaynes"]
+--
+bookID (Book id _ _) = id
+bookTitle (Book _ title _) = title
+bookAuthors (Book _ _ authors) = authors
+
+-- | Customer
+--
+-- >>> :type customerID
+-- customerID :: Customer -> CustomerID
+-- >>> let customer1 = Customer { customerID = 123, customerAddress = ["abc"], customerName = "foo" }
+-- >>> customer1
+-- Customer {customerID = 123, customerName = "foo", customerAddress = ["abc"]}
+-- >>> customerName customer1
+-- "foo"
+--
+data Customer = Customer {
+      customerID      :: CustomerID
+    , customerName    :: String
+    , customerAddress :: Address
+    } deriving (Show)
