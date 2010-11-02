@@ -42,7 +42,17 @@ data Bool = False | True
 -- >>> :type it
 -- it :: BillingInfo
 --
--- FIXME: test failed!
+-- FIXME: the above test failed!
+--
+-- >>> Invoice
+--
+-- <interactive>:1:0:
+--    No instance for (Show (CustomerID -> BillingInfo))
+--      arising from a use of `print' at <interactive>:1:0-6
+--    Possible fix:
+--      add an instance declaration for (Show (CustomerID -> BillingInfo))
+--    In a stmt of an interactive GHCi command: print it
+--
 type CardHolder = String
 type CardNumber = String
 type Address = [String]
