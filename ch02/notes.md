@@ -15,3 +15,7 @@ When a function has type variables in its signature, indicating that some of its
 For examples, `:type last` gives `last :: [a] -> a` and `:type fst` gives `(a b) -> a`.
 
 `:type take` gives `take :: Int -> [a] -> [a]`. The arrow is _right-associative_, which means `take` has one argument `Int` and returns a function from `[a]` to `[a]`.
+
+----
+
+Few programming languages go as far as Haskell in insisting that purity should be the default. Purity makes the job of understanding code easier. (That's really great!)
