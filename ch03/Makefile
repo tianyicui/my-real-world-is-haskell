@@ -2,7 +2,7 @@ test:
 	doctest *.hs
 
 doc:
-	haddock *.hs -o doc/
+	haddock -h *.hs -o doc/
 
 clean:
 	git clean -fdX .

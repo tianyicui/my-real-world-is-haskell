@@ -42,10 +42,8 @@ data Bool = False | True
 -- >>> :type it
 -- it :: BillingInfo
 --
--- FIXME: the above test failed!
---
 -- >>> Invoice
---
+-- <BLANKLINE>
 -- <interactive>:1:0:
 --    No instance for (Show (CustomerID -> BillingInfo))
 --      arising from a use of `print' at <interactive>:1:0-6
