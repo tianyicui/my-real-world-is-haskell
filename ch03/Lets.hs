@@ -6,3 +6,22 @@ lend amount balance = let reserve = 100
                       in if balance < reserve
                          then Nothing
                          else Just newBalance
+
+-- Examples of shadowing
+--
+-- >>> foo
+-- 3
+-- >>> bar
+-- ("foo", 1)
+-- >>> :type quux
+-- quux :: t-> [Char]
+foo = let a = 1
+      in let b = 2
+         in a + b
+bar = let x = 1
+      in ((let x = "foo" in x), x)
+quux a = let a = "foo"
+         in a ++ "eek!"
+-- Note: GHC has a /-fwarn-name-shadowing/ option.
+
+lend2 amount balance = 
