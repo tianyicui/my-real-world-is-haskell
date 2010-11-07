@@ -24,4 +24,9 @@ quux a = let a = "foo"
          in a ++ "eek!"
 -- Note: GHC has a /-fwarn-name-shadowing/ option.
 
-lend2 amount balance = 
+-- The where clause
+lend2 amount balance = if amount < reserve * 0.5
+                       then Just newBalance
+                       else Nothing
+    where reserve    = 100
+          newBalance = balance - amount
