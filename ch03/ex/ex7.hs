@@ -2,6 +2,6 @@ module Ex7 where
 
 intersperse :: a -> [[a]] -> [a]
 
-intersperse d (x:xs) = [x++[d]] ++ (intersperse d xs)
-intersperse _ [a]    = a
-intersperse _ _      = []
+intersperse _ []     = []
+intersperse _ [x]    = x
+intersperse d (x:xs) = x ++ [d] ++ (intersperse d xs)
