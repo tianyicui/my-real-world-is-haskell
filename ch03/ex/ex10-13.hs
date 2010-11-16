@@ -5,7 +5,7 @@ import Data.List
 data Direction = TurnLeft
                | TurnRight
                | StraightLine
-                 deriving Show
+                 deriving Eq
 
 turn (x1, y1) (x2, y2) (x3, y3) =
     case signum ((x2-x1)*(y3-y1) - (y2-y1)*(x3-x1)) of
@@ -35,13 +35,16 @@ grahamScanPrepareList ll =
     let l = sortByPolarAngelWith (pointWithLowestY ll) ll
     in l++[(head l)]
 
+-- grahamScan
+--
+-- >>> grahamScan [(10,0), (10,1),(-10,1),(-10,0),(-7,0),(-10,2),(-10,3),(-4,1),(-2,2),(-12,1)]
+-- [(-10.0,0.0),(10.0,0.0),(10.0,1.0),(-10.0,3.0),(-12.0,1.0)]
+--
 grahamScan ll =
-    let l = grahamScanPrepareList ll
-    in (doScan l) where
-        doScan (x:y:z:l) =
-            case (turn x y z) of
-                TurnLeft -> (x:(doScan (y:z:l)))
-                _        -> (doScan (x:z:l))
-        doScan xs      = init xs
-
--- TODO: more tests on this
+    let (x:y:l) = grahamScanPrepareList ll
+    in (reverse (tail (doScan [y,x] l))) where
+        doScan (i:j:l) (x:s)
+            | turn j i x == TurnLeft = doScan (x:i:j:l) s
+            | otherwise              = doScan (j:l) (x:s)
+        doScan (i:l) (x:s)           = doScan (x:i:l) s
+        doScan s []                  = s
