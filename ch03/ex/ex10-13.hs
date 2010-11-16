@@ -12,3 +12,6 @@ turn (Point x1 y1) (Point x2 y2) (Point x3 y3) =
         1  -> TurnLeft
         -1 -> TurnRight
         0  -> StraightLine
+
+listTurn (x:y:z:l) = [(turn x y z)] ++ (listTurn (y:z:l))
+listTurn _         = []
