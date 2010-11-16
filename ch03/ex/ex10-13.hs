@@ -18,13 +18,18 @@ listTurn _         = []
 
 polarAngel (x1, y1) (x2, y2) = atan2 (y2 - y1) (x2 - x1)
 
-sortByPolarAngelWith x l = sortBy cmp l
-    where cmp i j        = compare (polarAngel x i) (polarAngel x j)
+dist (x1, y1) (x2, y2) = abs(x1 - x2) + abs(y1 - y2)
+
+sortByPolarAngelWith x l = (x:(sortBy cmp (filter (/=x) l)))
+    where cmp i j        = case polarCompare of
+            EQ -> compare (dist x i) (dist x j)
+            _  -> polarCompare
+            where polarCompare = compare (polarAngel x i) (polarAngel x j)
 
 pointWithLowestY l = minimumBy cmpY l
     where cmpY (x1, y1) (x2, y2) = if y1==y2
-                                             then compare x1 x2
-                                             else compare y1 y2
+                                   then compare x1 x2
+                                   else compare y1 y2
 
 grahamScanPrepareList ll =
     let l = sortByPolarAngelWith (pointWithLowestY ll) ll
