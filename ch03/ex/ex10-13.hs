@@ -23,19 +23,20 @@ dist (x1, y1) (x2, y2) = abs(x1 - x2) + abs(y1 - y2)
 -- [(-10.0,0.0),(10.0,0.0),(10.0,1.0),(-10.0,3.0),(-12.0,1.0)]
 --
 grahamScan ll =
-    let (x:y:l) = l++[head l] where
-            l = sortPoints (headPoint ll) ll where
-                headPoint l = minimumBy cmp l where
-                    cmp (x1, y1) (x2, y2)
-                        | y1 == y2  = compare x1 x2
-                        | otherwise = compare y1 y2
-                sortPoints x l = (x:(sortBy cmp (filter (/=x) l))) where
-                    cmp i j
-                        | cmp0 == EQ = cmp1
-                        | otherwise  = cmp0
-                        where
-                            cmp0 = compare (angle x i) (angle x j)
-                            cmp1 = compare (dist x i) (dist x j)
+    let (x:y:l) = prepareList where
+        prepareList = sortedPoints++[head sortedPoints]
+        sortedPoints = sortPoints (pivotPoint ll) ll
+        pivotPoint points = minimumBy cmp points where
+            cmp (x1, y1) (x2, y2)
+                | y1 == y2  = compare x1 x2
+                | otherwise = compare y1 y2
+        sortPoints pivot points = (pivot:(sortBy cmp (filter (/=pivot) points))) where
+            cmp i j
+                | cmp0 == EQ = cmp1
+                | otherwise  = cmp0
+                where
+                    cmp0 = compare (angle pivot i) (angle pivot j)
+                    cmp1 = compare (dist pivot i) (dist pivot j)
     in (reverse (tail (doScan [y,x] l))) where
         doScan (i:j:l) (x:s)
             | turn j i x == TurnLeft = doScan (x:i:j:l) s
