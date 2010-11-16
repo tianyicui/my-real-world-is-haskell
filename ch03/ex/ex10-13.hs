@@ -13,27 +13,9 @@ turn (x1, y1) (x2, y2) (x3, y3) =
         -1 -> TurnRight
         0  -> StraightLine
 
-listTurn (x:y:z:l) = (turn x y z):(listTurn (y:z:l))
-listTurn _         = []
-
-polarAngel (x1, y1) (x2, y2) = atan2 (y2 - y1) (x2 - x1)
+angle (x1, y1) (x2, y2) = atan2 (y2 - y1) (x2 - x1)
 
 dist (x1, y1) (x2, y2) = abs(x1 - x2) + abs(y1 - y2)
-
-sortByPolarAngelWith x l = (x:(sortBy cmp (filter (/=x) l)))
-    where cmp i j        = case polarCompare of
-            EQ -> compare (dist x i) (dist x j)
-            _  -> polarCompare
-            where polarCompare = compare (polarAngel x i) (polarAngel x j)
-
-pointWithLowestY l = minimumBy cmpY l
-    where cmpY (x1, y1) (x2, y2) = if y1==y2
-                                   then compare x1 x2
-                                   else compare y1 y2
-
-grahamScanPrepareList ll =
-    let l = sortByPolarAngelWith (pointWithLowestY ll) ll
-    in l++[(head l)]
 
 -- grahamScan
 --
@@ -41,7 +23,19 @@ grahamScanPrepareList ll =
 -- [(-10.0,0.0),(10.0,0.0),(10.0,1.0),(-10.0,3.0),(-12.0,1.0)]
 --
 grahamScan ll =
-    let (x:y:l) = grahamScanPrepareList ll
+    let (x:y:l) = l++[head l] where
+            l = sortPoints (headPoint ll) ll where
+                headPoint l = minimumBy cmp l where
+                    cmp (x1, y1) (x2, y2)
+                        | y1 == y2  = compare x1 x2
+                        | otherwise = compare y1 y2
+                sortPoints x l = (x:(sortBy cmp (filter (/=x) l))) where
+                    cmp i j
+                        | cmp0 == EQ = cmp1
+                        | otherwise  = cmp0
+                        where
+                            cmp0 = compare (angle x i) (angle x j)
+                            cmp1 = compare (dist x i) (dist x j)
     in (reverse (tail (doScan [y,x] l))) where
         doScan (i:j:l) (x:s)
             | turn j i x == TurnLeft = doScan (x:i:j:l) s
