@@ -6,16 +6,16 @@ Lists:
 
 * basics
   * length
-    * `O(N)`
+    * Note: `O(N)`
   * null
   * head, tail
   * last, init
-    * `O(N)`
+    * Note: `O(N)`
   * ++, concat
     * `(++) :: [a] -> [a] -> [a]`
     * `concat :: [[a]] -> [a]`
   * reverse
-* bool relelated
+* boolean
   * and, or
     * `[Bool] -> Bool`
 * sublists
@@ -29,3 +29,16 @@ Lists:
     * `(a -> Bool) -> [a] -> ([a], [a])`
     * `span p xs = (takeWhile p xs, dropWhile p xs)`
     * `break p = span (not . p)`
+* searching lists
+  * elem, notElem
+  * filter
+  * Data.List (isPrefixOf, isInfixOf, isSuffixOf)
+* list zipping
+  * zip
+    * `[a] -> [b] -> [(a,b)]`
+  * zipWith
+    * `(a -> b-> c) -> [a] -> [b] -> [c]`
+  * we also have zip3 and zipWith3 in Prelude, and up to zip7 and zipWith7 in Data.List
+* string-handling
+  * lines, unlines
+  * words, unwords
