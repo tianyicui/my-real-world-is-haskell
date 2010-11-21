@@ -31,7 +31,6 @@ Lists:
     * `break p = span (not . p)`
 * searching lists
   * elem, notElem
-  * filter
   * Data.List (isPrefixOf, isInfixOf, isSuffixOf)
 * list zipping
   * zip
@@ -42,3 +41,8 @@ Lists:
 * string-handling
   * lines, unlines
   * words, unwords
+* higher order functions
+  * map
+  * filter
+  * foldl
+  * foldr
