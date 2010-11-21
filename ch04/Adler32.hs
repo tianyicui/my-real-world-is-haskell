@@ -12,3 +12,11 @@ adler32 xs = helper 1 0 xs where
     helper a b _ =
         (b `shiftL` 16) .|. a
 
+-- using foldl
+adler32' xs =
+    let (a, b) = foldl step (1, 0) xs
+    in (b `shiftL` 16) .|. a
+    where
+    step (a, b) x =
+        let a' = a + (ord x .&. 0xff)
+        in (a' `mod` base, (a' + b) `mod` base)
