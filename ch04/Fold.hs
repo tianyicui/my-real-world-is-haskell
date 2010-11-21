@@ -28,3 +28,5 @@ identity = foldr (:) []
 
 append :: [a] -> [a] -> [a]
 append = flip $ foldr (:)
+
+-- TODO: what's the exact difference between the implementations of foldl and Data.List.foldl'? How does Data.List.foldl' avoid space leak?
