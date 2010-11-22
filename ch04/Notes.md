@@ -46,3 +46,14 @@ Lists:
   * filter
   * foldl
   * foldr
+
+----
+
+Sections:
+
+    ghci> :type (^2)
+    (^1) :: (Num a) => a -> a
+    ghci> :type (2^)
+    (2^) :: (Num t, Integral b) => b -> t
+    ghci> :type (`elem` ['a'..'z'])
+    (`elem` ['a'..'z']) :: Char -> Bool
