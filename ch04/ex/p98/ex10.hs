@@ -11,3 +11,5 @@ words_foldr xs = tail $ foldr step [] (' ':xs) where
     step ch [] = [[ch]]
     emptyHead l@("":xs) = l
     emptyHead xs = "" : xs
+
+unlines_foldr = tail . foldr (\x -> (++) ('\n' : x) ) "\n"
