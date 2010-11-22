@@ -1,4 +1,4 @@
-import Prelude(id, flip, ($))
+import Prelude(id, flip, ($), seq)
 
 -- implementation of foldl and foldr
 
@@ -29,4 +29,8 @@ identity = foldr (:) []
 append :: [a] -> [a] -> [a]
 append = flip $ foldr (:)
 
--- TODO: what's the exact difference between the implementations of foldl and Data.List.foldl'? How does Data.List.foldl' avoid space leak?
+-- seq: it forces its first argument to be evaluated, and then returns its second argument.
+foldl' _    zero []     = zero
+foldl' step zero (x:xs) =
+    let new = step zero x
+    in  new `seq` foldl' step new xs
