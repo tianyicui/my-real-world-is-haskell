@@ -57,3 +57,11 @@ Sections:
     (2^) :: (Num t, Integral b) => b -> t
     ghci> :type (`elem` ['a'..'z'])
     (`elem` ['a'..'z']) :: Char -> Bool
+
+----
+
+Tips for Writing Readable Code
+
+* Try to avoid tail recursion by using library functions such as `map`, `take` and `filter`, because tail recursion is just like loop in an imperative language, we're forced to look in detail at the entire definition of the function to see what it's doing.
+* Don't use a fold if you can compose some library functions, but otherwise try to use a fold in preference to a hand-rolled tail recursive loop.
+* Anonymous functions tend to interrupt the "flow" of reading a piece of code. Try to use a local function definition in a `let` or `here` clause, since we don't need to understand the function's definition when we're reading the code that uses it, and a well-chosen function name acts as a tiny piece of local documentation.
