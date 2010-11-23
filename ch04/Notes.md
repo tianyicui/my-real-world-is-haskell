@@ -65,3 +65,11 @@ Tips for Writing Readable Code
 * Try to avoid tail recursion by using library functions such as `map`, `take` and `filter`, because tail recursion is just like loop in an imperative language, we're forced to look in detail at the entire definition of the function to see what it's doing.
 * Don't use a fold if you can compose some library functions, but otherwise try to use a fold in preference to a hand-rolled tail recursive loop.
 * Anonymous functions tend to interrupt the "flow" of reading a piece of code. Try to use a local function definition in a `let` or `here` clause, since we don't need to understand the function's definition when we're reading the code that uses it, and a well-chosen function name acts as a tiny piece of local documentation.
+
+----
+
+Avoiding Space Leaks with `seq`
+
+An expression that is not evaluated lazily is refered as _strict_, so `foldl'` is a strict left fold.
+
+Aside from its performance cost if overused, `seq` is not a miracle cure-all for memory consumption problems. Just because you can evaluate something strictly doesn’t mean you should. Careless use of seq may do nothing at all, move existing space leaks around, or introduce new leaks.
