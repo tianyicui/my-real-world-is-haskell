@@ -1,0 +1,1 @@
+Type Inference Is a Double-Edged Sword: we can omit as many type declarations as possible, but the downside is: compiler will infer types that are logical and consistent, but perhaps not at all what we meant.
