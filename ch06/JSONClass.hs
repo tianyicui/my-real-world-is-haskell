@@ -2,6 +2,8 @@
 
 module JSONClass where
 
+import Control.Arrow (second)
+
 data JValue = JString String
             | JNumber Double
             | JBool Bool
@@ -59,17 +61,19 @@ newtype JObj a = JObj {
 
 jaryFromJValue :: (JSON a) => JValue -> Either JSONError (JAry a)
 jaryFromJValue (JArray (JAry a)) =
-    whenRight JAry (mapEithers fromJValue a) where
-        whenRight :: (b -> c) -> Either a b -> Either a c
-        whenRight _ (Left err) = Left err
-        whenRight f (Right a) = Right (f a)
-        mapEithers :: (a -> Either b c) -> [a] -> Either b [c]
-        mapEithers f (x:xs) = case mapEithers f xs of
-            Left err -> Left err
-            Right ys -> case f x of
-                Left err -> Left err
-                Right y -> Right (y:ys)
-        mapEithers _ _ = Right []
+    whenRight JAry (mapEithers fromJValue a)
+
+whenRight :: (b -> c) -> Either a b -> Either a c
+whenRight _ (Left err) = Left err
+whenRight f (Right a) = Right (f a)
+
+mapEithers :: (a -> Either b c) -> [a] -> Either b [c]
+mapEithers f (x:xs) = case mapEithers f xs of
+    Left err -> Left err
+    Right ys -> case f x of
+        Left err -> Left err
+        Right y -> Right (y:ys)
+mapEithers _ _ = Right []
 
 jaryToJValue :: (JSON a) => JAry a -> JValue
 jaryToJValue = JArray . JAry . map toJValue . fromJAry
@@ -86,3 +90,10 @@ jvaluesToJAry = JAry
 
 jaryOfJValuesToJValue :: JAry JValue -> JValue
 jaryOfJValuesToJValue = JArray
+
+instance (JSON a) => JSON (JObj a) where
+    toJValue = JObject . JObj . map (second toJValue) . fromJObj
+
+    fromJValue (JObject (JObj o)) = whenRight JObj (mapEithers unwrap o)
+      where unwrap (k,v) = whenRight ((,) k) (fromJValue v)
+    fromJValue _ = Left "not a JSON object"
