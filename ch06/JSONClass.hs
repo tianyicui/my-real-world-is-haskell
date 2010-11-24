@@ -39,3 +39,10 @@ instance JSON Integer where
 instance JSON Double where
     toJValue = JNumber
     fromJValue = doubleToJValue id
+
+newtype JAry a = JAry {
+      fromJAry :: [a]
+    } deriving (Eq, Ord, Show)
+
+jary :: [a] -> JAry a
+jary = JAry
