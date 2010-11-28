@@ -1,4 +1,4 @@
-{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE ScopedTypeVariables, NoMonomorphismRestriction #-}
 
 import Data.List(sortBy)
 import Data.Ord(comparing)
@@ -72,4 +72,9 @@ equalP' = liftP' (==)
 greaterP' = liftP' (>)
 lesserP' = liftP' (<)
 
--- ...
+---- ...
+
+-- ex4
+traverseP, traverseP' :: (Info -> Bool) -> ([Info] -> [Info]) -> FilePath -> IO [Info]
+traverseP filt order path = return.(filter filt) =<< (traverse order path)
+traverseP' filt order = traverse $ order . filter filt
