@@ -42,3 +42,24 @@ saferFileSize path = handle (\(_::SomeException) -> return Nothing) $ do
     size <- hFileSize h
     hClose h
     return (Just size)
+
+-- This is unpleasing. DSL required.
+myTest path _ (Just size) _ =
+    takeExtension path == ".cpp" && size > 131072
+myTest _ _ _ _ = False
+
+
+type InfoP a = FilePath
+             -> Permissions
+             -> Maybe Integer
+             -> ClockTime
+             -> a
+pathP :: InfoP FilePath
+pathP path _ _ _ = path
+
+sizeP :: InfoP Integer
+sizeP _ _ (Just size) _ = size
+sizeP _ _ Nothing     _ = -1
+
+equalP :: (Eq a) => InfoP a -> a -> InfoP Bool
+equalP f k = \w x y z -> f w x y z == k
