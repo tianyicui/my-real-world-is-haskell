@@ -1,5 +1,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
+module BetterPredicate where
+
 import Control.Monad (filterM)
 import System.Directory (Permissions(..), getModificationTime, getPermissions)
 import System.Time (ClockTime(..))
@@ -83,7 +85,7 @@ orP = liftP2 (||)
 
 constP :: a -> InfoP a
 constP k _ _ _ _ = k
-liftP' q f k = liftP2 q f (constP k)
+liftP_alt q f k = liftP2 q f (constP k)
 
 liftPath :: (FilePath -> a) -> InfoP a
 liftPath f w _ _ _ = f w

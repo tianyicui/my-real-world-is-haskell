@@ -10,6 +10,8 @@ import Control.Exception (bracket, handle)
 import System.IO (IOMode(..), hClose, hFileSize, openFile)
 import System.FilePath ((</>))
 
+import BetterPredicate
+
 data Info = Info {
       infoPath :: FilePath
     , infoPerms :: Maybe Permissions
@@ -47,3 +49,27 @@ isDirectory = maybe False searchable . infoPerms
 -- exercises
 traverseEx1 = traverse $ reverse . sortBy (comparing infoPath)
 traverseEx2 = traverse $ reverse
+
+-- ex3
+type InfoP' a = Info -> a
+
+convertInfoP :: InfoP a -> InfoP' a
+convertInfoP p = \i ->
+    p (infoPath i) (mustHave $ infoPerms i) (infoSize i) (mustHave $ infoModTime i)
+
+mustHave :: Maybe a -> a
+mustHave (Just x) = x
+
+pathP' = convertInfoP pathP
+sizeP' = convertInfoP sizeP
+
+liftP' :: (a -> b -> c) -> InfoP' a -> b -> InfoP' c
+liftP' q f k = \i -> q (f i) k
+
+equalP' :: (Eq a) => InfoP' a -> a -> InfoP' Bool
+equalP' = liftP' (==)
+
+greaterP' = liftP' (>)
+lesserP' = liftP' (<)
+
+-- ...
