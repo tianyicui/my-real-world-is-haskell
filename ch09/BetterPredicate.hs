@@ -4,7 +4,7 @@ import Control.Monad (filterM)
 import System.Directory (Permissions(..), getModificationTime, getPermissions)
 import System.Time (ClockTime(..))
 import System.FilePath (takeExtension)
-import Control.Exception (bracket, handle, SomeException)
+import Control.Exception (bracket, handle)
 import System.IO (IOMode(..), hClose, hFileSize, openFile)
 
 import RecursiveContents (getRecursiveContents)
@@ -16,7 +16,7 @@ type Predicate =  FilePath
                -> Bool
 
 getFileSize :: FilePath -> IO (Maybe Integer)
-getFileSize path = handle (\(_::SomeException) -> return Nothing) $
+getFileSize path = handle (\(_::IOError) -> return Nothing) $
     bracket (openFile path ReadMode) hClose $ \h -> do
         size <- hFileSize h
         return (Just size)
@@ -37,7 +37,7 @@ simpleFileSize path = do
     return size
 
 saferFileSize :: FilePath -> IO (Maybe Integer)
-saferFileSize path = handle (\(_::SomeException) -> return Nothing) $ do
+saferFileSize path = handle (\(_::IOError) -> return Nothing) $ do
     h <- openFile path ReadMode
     size <- hFileSize h
     hClose h

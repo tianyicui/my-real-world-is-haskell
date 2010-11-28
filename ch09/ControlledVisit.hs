@@ -1,6 +1,11 @@
+{-# LANGUAGE ScopedTypeVariables #-}
+
 import Control.Monad (forM, liftM)
+import System.Directory (Permissions(..), getDirectoryContents, getPermissions, getModificationTime)
 import System.Time (ClockTime(..))
-import System.Directory (Permissions(..), getDirectoryContents)
+import System.FilePath (takeExtension)
+import Control.Exception (bracket, handle)
+import System.IO (IOMode(..), hClose, hFileSize, openFile)
 import System.FilePath ((</>))
 
 data Info = Info {
@@ -10,8 +15,15 @@ data Info = Info {
     , infoModTime :: Maybe ClockTime
     } deriving (Eq, Ord, Show)
 
+maybeIO :: IO a -> IO (Maybe a)
+maybeIO act = handle (\(_::IOError) -> return Nothing) (Just `liftM` act)
+
 getInfo :: FilePath -> IO Info
-getInfo = undefined
+getInfo path = do
+    perms <- maybeIO (getPermissions path)
+    size <- maybeIO (bracket (openFile path ReadMode) hClose hFileSize)
+    modified <- maybeIO (getModificationTime path)
+    return (Info path perms size modified)
 
 traverse :: ([Info] -> [Info]) -> FilePath -> IO [Info]
 traverse order path = do
