@@ -61,5 +61,13 @@ sizeP :: InfoP Integer
 sizeP _ _ (Just size) _ = size
 sizeP _ _ Nothing     _ = -1
 
+-- so we can do things like: betterFind (sizeP `equalP` 1024)
 equalP :: (Eq a) => InfoP a -> a -> InfoP Bool
 equalP f k = \w x y z -> f w x y z == k
+
+liftP :: (a -> b -> c) -> InfoP a -> b -> InfoP c
+liftP q f k = \w x y z -> f w x y z `q` k
+
+greaterP, lesserP :: (Ord a) => InfoP a -> a -> InfoP Bool
+greaterP = liftP (>)
+lesserP = liftP (<)
