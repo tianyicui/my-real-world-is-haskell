@@ -84,3 +84,22 @@ orP = liftP2 (||)
 constP :: a -> InfoP a
 constP k _ _ _ _ = k
 liftP' q f k = liftP2 q f (constP k)
+
+liftPath :: (FilePath -> a) -> InfoP a
+liftPath f w _ _ _ = f w
+
+myTest2 = (liftPath takeExtension `equalP` ".cpp") `andP`
+          (sizeP `greaterP` 131072)
+
+-- use our own operators
+(==?) = equalP
+(&&?) = andP
+(>?) = greaterP
+
+myTest3 = (liftPath takeExtension ==? ".cpp") &&? (sizeP >? 131072)
+
+infix 4 ==?
+infixr 3 &&?
+infix 4 >?
+
+myTest4 = liftPath takeExtension ==? ".cpp" &&? sizeP >? 131072
