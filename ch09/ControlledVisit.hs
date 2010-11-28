@@ -1,5 +1,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
+import Data.List(sortBy)
+import Data.Ord(comparing)
 import Control.Monad (forM, liftM)
 import System.Directory (Permissions(..), getDirectoryContents, getPermissions, getModificationTime)
 import System.Time (ClockTime(..))
@@ -41,3 +43,7 @@ getUsefulContents path = do
 
 isDirectory :: Info -> Bool
 isDirectory = maybe False searchable . infoPerms
+
+-- ex1
+traverseAlphabeticOrder = traverse $ reverse . sortBy (comparing infoPath)
+-- ex2
