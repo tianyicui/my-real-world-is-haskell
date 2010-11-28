@@ -1,5 +1,7 @@
 {-# LANGUAGE ScopedTypeVariables, NoMonomorphismRestriction #-}
 
+module ControlledVisit where
+
 import Data.List(sortBy)
 import Data.Ord(comparing)
 import Control.Monad (forM, liftM)
