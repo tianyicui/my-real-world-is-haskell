@@ -44,6 +44,6 @@ getUsefulContents path = do
 isDirectory :: Info -> Bool
 isDirectory = maybe False searchable . infoPerms
 
--- ex1
-traverseAlphabeticOrder = traverse $ reverse . sortBy (comparing infoPath)
--- ex2
+-- exercises
+traverseEx1 = traverse $ reverse . sortBy (comparing infoPath)
+traverseEx2 = traverse $ reverse
