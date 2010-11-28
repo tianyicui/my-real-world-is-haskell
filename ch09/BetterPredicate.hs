@@ -1,8 +1,10 @@
+{-# LANGUAGE ScopedTypeVariables #-}
+
 import Control.Monad (filterM)
 import System.Directory (Permissions(..), getModificationTime, getPermissions)
 import System.Time (ClockTime(..))
 import System.FilePath (takeExtension)
-import Control.Exception (bracket, handle)
+import Control.Exception (bracket, handle, SomeException)
 import System.IO (IOMode(..), hClose, hFileSize, openFile)
 
 import RecursiveContents (getRecursiveContents)
@@ -32,7 +34,7 @@ simpleFileSize path = do
     return size
 
 saferFileSize :: FilePath -> IO (Maybe Integer)
-saferFileSize path = handle (\_ -> return Nothing) $ do
+saferFileSize path = handle (\(_::SomeException) -> return Nothing) $ do
     h <- openFile path ReadMode
     size <- hFileSize h
     hClose h
