@@ -10,7 +10,7 @@ parseRawPGM =
     skipSpaces ==>&
     parseNat ==> \maxGrey ->
     parseByte ==>&
-    parseBytes (width * height) ==> \bitmap ->
+    parseBytes (width * height * if maxGrey > 255 then 2 else 1) ==> \bitmap ->
     identity (Greymap width height maxGrey bitmap)
   where notWhite = (`notElem` " \r\n\t")
 
