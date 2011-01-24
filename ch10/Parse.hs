@@ -1,10 +1,11 @@
+module Parse where
+
 import qualified Data.ByteString.Lazy.Char8 as L8
 import qualified Data.ByteString.Lazy as L
 import Data.Int (Int64)
 import Data.Word (Word8)
 import Data.Char (chr, isDigit, isSpace)
 import Control.Applicative ((<$>)) -- fmap
-import PNM -- Greymap
 
 data ParseState = ParseState {
       string :: L.ByteString
@@ -130,16 +131,3 @@ parseBytes n =
     in putState st' ==>&
        assert (L.length h == n') "end of input" ==>&
        identity h
-
-parseRawPGM =
-    parseWhileWith w2c notWhite ==> \header ->
-    skipSpaces ==>&
-    parseNat ==> \width ->
-    skipSpaces ==>&
-    parseNat ==> \height ->
-    skipSpaces ==>&
-    parseNat ==> \maxGrey ->
-    parseByte ==>&
-    parseBytes (width * height) ==> \bitmap ->
-    identity (Greymap width height maxGrey bitmap)
-  where notWhite = (`notElem` " \r\n\t")
