@@ -131,3 +131,20 @@ parseBytes n =
     in putState st' ==>&
        assert (L.length h == n') "end of input" ==>&
        identity h
+
+-- ex1
+parseNatArray :: Int -> Parse [Int]
+parseNatArray 0 = identity []
+parseNatArray n =
+    parseNat ==> \x ->
+    parseNatArray (n-1) ==> \xs ->
+    identity (x:xs)
+
+parsePlainBytes :: Int -> Parse L.ByteString
+parsePlainBytes n =
+    intArray2ByteArray <$> parseNatArray n
+  where int2word8 = undefined :: Int -> Word8 -- TODO
+        emptyByteString = undefined :: L.ByteString
+        intArray2ByteArray [] = emptyByteString
+        intArray2ByteArray (x:xs) =
+            L.cons (int2word8 x) $ intArray2ByteArray xs
