@@ -1,7 +1,7 @@
 import Parse
 import PNM
 
-parseRawPGM =
+parsePGM =
     parseWhileWith w2c notWhite ==> \header ->
     skipSpaces ==>&
     parseNat ==> \width ->
@@ -10,20 +10,10 @@ parseRawPGM =
     skipSpaces ==>&
     parseNat ==> \maxGrey ->
     parseByte ==>&
-    parseBytes (width * height * if maxGrey > 255 then 2 else 1) ==> \bitmap ->
-    identity (Greymap width height maxGrey bitmap)
-  where notWhite = (`notElem` " \r\n\t")
-
--- ex1
-parsePlainPGM =
-    parseWhileWith w2c notWhite ==> \header ->
-    skipSpaces ==>&
-    parseNat ==> \width ->
-    skipSpaces ==>&
-    parseNat ==> \height ->
-    skipSpaces ==>&
-    parseNat ==> \maxGrey ->
-    parseByte ==>&
-    parsePlainBytes (width * height) ==> \bitmap ->
+    case header of
+      "P2" -> parseBytes (width * height * if maxGrey > 255 then 2 else 1)
+      "P5" -> parsePlainBytes (width * height)
+      _    -> bail "Invalid Header"
+    ==> \bitmap ->
     identity (Greymap width height maxGrey bitmap)
   where notWhite = (`notElem` " \r\n\t")
