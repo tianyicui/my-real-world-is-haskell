@@ -129,6 +129,7 @@ threshold n a = binary <$> a
           pivot    = round $ least + (greatest - least) * n
           least    = fromIntegral $ choose (<) a
           greatest = fromIntegral $ choose (>) a
+          choose f = foldA1 $ \x y -> if f x y then x else y
 
 type Run = Int
 type RunLength a = [(Run, a)]
@@ -147,6 +148,8 @@ scaleToOne xs = map divide xs
     where divide d = fromIntegral d / divisor
           divisor = fromIntegral (sum xs)
 
+type ScoreTable = [[Score]]
+
 -- "SRL" means "scaled run length"
 asSRL :: [String] -> ScoreTable
 asSRL = map (scaleToOne . runLengths)
@@ -164,7 +167,7 @@ bestScores srl ps = take 3 . sort $ scores
     where scores = zip [distance d (scaleToOne ps) | d <- srl] digits
           digits = [0..9]
 
-data Parity a = Even | Odd a | None a
+data Parity a = Even a | Odd a | None a
                 deriving (Show)
 
 fromParity :: Parity a -> a
