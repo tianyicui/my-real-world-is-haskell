@@ -143,8 +143,7 @@ parseNatArray n =
 parsePlainBytes :: Int -> Parse L.ByteString
 parsePlainBytes n =
     intArray2ByteArray <$> parseNatArray n
-  where int2word8 = undefined :: Int -> Word8 -- TODO
-        emptyByteString = undefined :: L.ByteString
+  where emptyByteString = L.empty
         intArray2ByteArray [] = emptyByteString
         intArray2ByteArray (x:xs) =
-            L.cons (int2word8 x) $ intArray2ByteArray xs
+            L.cons (fromIntegral x) $ intArray2ByteArray xs
